@@ -179,6 +179,10 @@ html:not(.dark) .qty-btn:hover {
     background: rgba(255,255,255,0.06);
     color: #fff;
 }
+html:not(.dark) .share-btn:hover {
+    background: rgba(24, 24, 27, 0.05);
+    color: #09090b;
+}
 .share-btn:active {
     transform: scale(0.96);
 }
@@ -392,14 +396,6 @@ html:not(.dark) .desc-fade-mask::after {
                 </svg>
                 Back
             </button>
-            
-            <button id="copy-link-btn" class="share-btn flex items-center gap-1.5 text-xs text-zinc-400 font-medium px-3 py-1.5 rounded-xl cursor-pointer">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M8.684 10.742a3 3 0 110 2.516m0-2.516a3 3 0 114.124-4.124m-4.124 4.125L12 14M0 0h24v24H0z" stroke="none"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                </svg>
-                <span>Share Link</span>
-            </button>
         </div>
 
         <nav class="hidden sm:flex items-center text-xs text-zinc-600 gap-2">
@@ -473,10 +469,20 @@ html:not(.dark) .desc-fade-mask::after {
         <div class="lg:sticky lg:top-8 flex flex-col gap-6">
 
             <div>
-                <div class="section-label mb-4">
-                    <a href="{{ url_for('home.products', category_id=product.category_id) }}" class="hover:opacity-70 transition-opacity">
-                        {{ product.category_name.name }}
-                    </a>
+                <div class="flex items-center justify-between gap-4 mb-4">
+                    <div class="section-label">
+                        <a href="{{ url_for('home.products', category_id=product.category_id) }}" class="hover:opacity-70 transition-opacity">
+                            {{ product.category_name.name }}
+                        </a>
+                    </div>
+
+                    <button id="copy-link-btn" class="share-btn flex items-center gap-1.5 text-xs text-zinc-400 font-medium px-3 py-1.5 rounded-xl cursor-pointer">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M8.684 10.742a3 3 0 110 2.516m0-2.516a3 3 0 114.124-4.124m-4.124 4.125L12 14M0 0h24v24H0z" stroke="none"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                        </svg>
+                        <span>Share Link</span>
+                    </button>
                 </div>
                 <h1 class="serif text-3xl lg:text-[2.35rem] text-zinc-900 dark:text-white leading-tight tracking-tight">
                     {{ product.name }}
