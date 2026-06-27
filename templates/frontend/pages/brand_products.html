@@ -64,7 +64,7 @@
     <div class="mb-5">
         <a
             href="{{ url_for('home.all_brands') }}"
-            class="inline-flex items-center gap-2 text-xs text-zinc-500 hover:text-white transition-colors uppercase tracking-[0.22em] font-semibold"
+            class="inline-flex items-center gap-2 text-xs text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors uppercase tracking-[0.22em] font-semibold"
         >
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
@@ -81,7 +81,7 @@
     <!-- ====================================== -->
     <!-- BRAND BANNER - SMALL MODERN CLEAN -->
     <!-- ====================================== -->
-    <section class="brand-banner rounded-3xl border border-white/10 overflow-hidden shadow-xl mb-8 md:mb-10">
+    <section class="brand-banner rounded-3xl border border-zinc-200 dark:border-white/10 overflow-hidden shadow-xl mb-8 md:mb-10">
 
         <div class="grid grid-cols-[105px_1fr] sm:grid-cols-[145px_1fr] md:grid-cols-[190px_1fr]">
 
@@ -117,14 +117,14 @@
             <div class="p-4 sm:p-6 md:p-8 flex flex-col justify-center min-w-0">
 
                 <div class="flex items-center gap-2 mb-2">
-                    <span class="h-1.5 w-1.5 rounded-full bg-white"></span>
+                    <span class="h-1.5 w-1.5 rounded-full bg-zinc-900 dark:bg-white"></span>
 
                     <p class="text-[10px] sm:text-xs text-zinc-500 tracking-[0.22em] uppercase font-semibold">
                         Brand Collection
                     </p>
                 </div>
 
-                <h1 class="text-xl sm:text-3xl md:text-4xl font-black text-white tracking-widest uppercase leading-tight truncate">
+                <h1 class="text-xl sm:text-3xl md:text-4xl font-black text-zinc-900 dark:text-white tracking-widest uppercase leading-tight truncate">
                     {{ brand.name }}
                 </h1>
 
@@ -172,7 +172,7 @@
                 Products
             </p>
 
-            <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight">
+            <h2 class="text-2xl md:text-3xl font-black text-zinc-900 dark:text-white tracking-tight">
                 {{ brand.name }} Collection
             </h2>
 
@@ -203,9 +203,9 @@
         <!-- ====================================== -->
         <!-- EMPTY STATE -->
         <!-- ====================================== -->
-        <div class="rounded-3xl border border-white/10 bg-zinc-950/70 p-10 md:p-16 text-center">
+        <div class="rounded-3xl border border-zinc-200 dark:border-white/10 bg-zinc-100/50 dark:bg-zinc-950/70 p-10 md:p-16 text-center">
 
-            <div class="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-white/5 text-zinc-500 border border-white/10">
+            <div class="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-zinc-200 dark:bg-white/5 text-zinc-500 border border-zinc-300 dark:border-white/10">
                 <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                         stroke-linecap="round"
@@ -222,7 +222,7 @@
                 </svg>
             </div>
 
-            <h2 class="text-white font-bold text-xl">
+            <h2 class="text-zinc-900 dark:text-white font-bold text-xl">
                 No products found
             </h2>
 
@@ -232,7 +232,7 @@
 
             <a
                 href="{{ url_for('home.products') }}"
-                class="inline-flex mt-6 rounded-full bg-white text-black px-5 py-2.5 text-sm font-bold hover:bg-zinc-200 transition"
+                class="inline-flex mt-6 rounded-full bg-zinc-900 text-white dark:bg-white dark:text-black px-5 py-2.5 text-sm font-bold hover:bg-zinc-800 dark:hover:bg-zinc-200 transition"
             >
                 Browse All Products
             </a>
@@ -248,10 +248,10 @@
 
         <div class="mt-12 flex items-center justify-center gap-2 flex-wrap">
 
-            {% if pagination.has_prev %}
+             {% if pagination.has_prev %}
                 <a
                     href="{{ url_for('home.brand_products', brand_id=brand.id, page=pagination.prev_num) }}"
-                    class="px-5 py-2.5 rounded-full border border-white/10 bg-white/5 text-zinc-400 hover:text-white hover:border-white/30 transition text-sm"
+                    class="px-5 py-2.5 rounded-full border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:border-zinc-300 dark:hover:border-white/30 transition text-sm"
                 >
                     Prev
                 </a>
@@ -262,13 +262,13 @@
                 {% if page_num %}
 
                     {% if page_num == pagination.page %}
-                        <span class="px-5 py-2.5 rounded-full bg-white text-black font-bold text-sm">
+                        <span class="px-5 py-2.5 rounded-full bg-zinc-900 text-white dark:bg-white dark:text-black font-bold text-sm">
                             {{ page_num }}
                         </span>
                     {% else %}
                         <a
                             href="{{ url_for('home.brand_products', brand_id=brand.id, page=page_num) }}"
-                            class="px-5 py-2.5 rounded-full border border-white/10 bg-white/5 text-zinc-400 hover:text-white hover:border-white/30 transition text-sm"
+                            class="px-5 py-2.5 rounded-full border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:border-zinc-300 dark:hover:border-white/30 transition text-sm"
                         >
                             {{ page_num }}
                         </a>
@@ -283,7 +283,7 @@
             {% if pagination.has_next %}
                 <a
                     href="{{ url_for('home.brand_products', brand_id=brand.id, page=pagination.next_num) }}"
-                    class="px-5 py-2.5 rounded-full border border-white/10 bg-white/5 text-zinc-400 hover:text-white hover:border-white/30 transition text-sm"
+                    class="px-5 py-2.5 rounded-full border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:border-zinc-300 dark:hover:border-white/30 transition text-sm"
                 >
                     Next
                 </a>

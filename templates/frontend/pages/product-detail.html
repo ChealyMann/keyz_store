@@ -35,12 +35,20 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap');
 
-:root {
+html.dark {
     --accent: #ffffff; /* Crisp white theme */
     --accent-dim: rgba(255, 255, 255, 0.12);
     --surface: rgba(255, 255, 255, 0.03);
     --border: rgba(255, 255, 255, 0.07);
     --border-hover: rgba(255, 255, 255, 0.18);
+}
+
+html:not(.dark) {
+    --accent: #0f0f11; /* Crisp dark theme */
+    --accent-dim: rgba(15, 15, 17, 0.12);
+    --surface: rgba(0, 0, 0, 0.03);
+    --border: rgba(0, 0, 0, 0.08);
+    --border-hover: rgba(0, 0, 0, 0.18);
 }
 
 .pd-page { font-family: 'DM Sans', sans-serif; }
@@ -271,7 +279,7 @@
 
 /* Mobile bar */
 #mobile-bar {
-    background: rgba(9,9,9,.9);
+    background: var(--bg);
     backdrop-filter: blur(24px) saturate(180%);
     border-top: 1px solid var(--border);
 }
@@ -450,14 +458,14 @@
                         {{ product.category_name.name }}
                     </a>
                 </div>
-                <h1 class="serif text-3xl lg:text-[2.35rem] text-white leading-tight tracking-tight">
+                <h1 class="serif text-3xl lg:text-[2.35rem] text-zinc-900 dark:text-white leading-tight tracking-tight">
                     {{ product.name }}
                 </h1>
             </div>
 
             <div class="flex items-center gap-4 flex-wrap">
                 <span id="variant-price"
-                    class="text-3xl font-bold tracking-tight {% if discount_pct > 0 %}text-red-400{% else %}text-white{% endif %}">
+                    class="text-3xl font-bold tracking-tight {% if discount_pct > 0 %}text-red-400{% else %}text-zinc-900 dark:text-white{% endif %}">
                     ${{ "%.2f"|format(initial_price) }}
                 </span>
 
@@ -480,7 +488,7 @@
                 <div class="variant-group">
                     <div class="flex items-center justify-between mb-3">
                         <span class="text-xs font-semibold text-zinc-500 uppercase tracking-widest">{{ group.name }}</span>
-                        <span id="selected-{{ group.slug }}" class="text-sm font-semibold text-white">
+                        <span id="selected-{{ group.slug }}" class="text-sm font-semibold text-zinc-900 dark:text-white">
                             {% if first_variant.data %}{{ first_variant.data.options[group.slug] }}{% endif %}
                         </span>
                     </div>
@@ -529,7 +537,7 @@
             <div class="info-card p-4 flex items-center justify-between gap-4">
                 <div class="flex-1 min-w-0">
                     <span class="text-[10px] font-semibold text-zinc-600 uppercase tracking-widest block mb-0.5">Selected</span>
-                    <span id="selected-variant-text" class="text-sm font-semibold text-white truncate block">
+                    <span id="selected-variant-text" class="text-sm font-semibold text-zinc-900 dark:text-white truncate block">
                         {% if first_variant.data %}
                             {{ first_variant.data.options.values() | join(' / ') }}
                         {% else %}
@@ -560,7 +568,7 @@
                 <div class="flex items-center gap-4">
                     <div class="flex items-center gap-3 info-card px-3 py-2">
                         <button class="qty-btn" id="qty-minus">−</button>
-                        <span id="qty-display" class="text-white font-semibold text-sm w-6 text-center select-none">1</span>
+                        <span id="qty-display" class="text-zinc-900 dark:text-white font-semibold text-sm w-6 text-center select-none">1</span>
                         <button class="qty-btn" id="qty-plus">+</button>
                     </div>
 
@@ -609,9 +617,9 @@
         <div class="flex items-end justify-between mb-8">
             <div>
                 <div class="section-label mb-2">Related</div>
-                <h2 class="serif text-2xl text-white">You might also like</h2>
+                <h2 class="serif text-2xl text-zinc-900 dark:text-white">You might also like</h2>
             </div>
-            <a href="{{ url_for('home.products') }}" class="text-xs font-semibold text-zinc-500 hover:text-white transition-colors tracking-wide uppercase">View all →</a>
+            <a href="{{ url_for('home.products') }}" class="text-xs font-semibold text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors tracking-wide uppercase">View all →</a>
         </div>
 
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -623,7 +631,7 @@
                         alt="{{ p.name }}" loading="lazy">
                 </div>
                 <div class="p-3.5">
-                    <p class="text-white text-sm font-semibold truncate mb-1">{{ p.name }}</p>
+                    <p class="text-zinc-900 dark:text-white text-sm font-semibold truncate mb-1">{{ p.name }}</p>
                     <p class="text-[var(--accent)] text-sm font-bold">${{ "%.2f"|format(p.price) }}</p>
                 </div>
             </a>
@@ -638,14 +646,14 @@
     <div class="flex items-center gap-3">
         <div class="flex flex-col flex-shrink-0">
             <span class="text-[10px] text-zinc-500 font-medium uppercase tracking-wider">Total</span>
-            <span id="mobile-variant-price" class="text-xl font-bold text-white leading-none">
+            <span id="mobile-variant-price" class="text-xl font-bold text-zinc-900 dark:text-white leading-none">
                 ${{ "%.2f"|format(initial_price) }}
             </span>
         </div>
 
         <div class="flex items-center gap-2 info-card px-2 py-1.5">
             <button class="qty-btn text-base" id="mob-qty-minus">−</button>
-            <span id="mob-qty-display" class="text-white font-semibold text-sm w-5 text-center select-none">1</span>
+            <span id="mob-qty-display" class="text-zinc-900 dark:text-white font-semibold text-sm w-5 text-center select-none">1</span>
             <button class="qty-btn text-base" id="mob-qty-plus">+</button>
         </div>
 
@@ -934,7 +942,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (priceEl) {
             priceEl.classList.toggle('text-red-400', hasDiscount);
-            priceEl.classList.toggle('text-white', !hasDiscount);
+            priceEl.classList.toggle('text-zinc-900', !hasDiscount);
+            priceEl.classList.toggle('dark:text-white', !hasDiscount);
         }
         updateDiscountBadge(variant.price, variant.old_price);
 

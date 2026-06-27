@@ -1,11 +1,11 @@
-<header class="sticky top-0 z-40 bg-black/90 backdrop-blur-xl border-b border-zinc-800">
+<header class="sticky top-0 z-40 bg-white/90 dark:bg-black/90 backdrop-blur-xl border-b border-zinc-200 dark:border-zinc-800 transition-colors duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16 md:h-20">
 
             <div class="flex-shrink-0">
                 <a href="{{ url_for('home.home') }}" class="flex items-center gap-2 group">
-                    <span class="text-xl md:text-2xl font-bold text-white tracking-widest uppercase">
-                        KEYZ<span class="text-zinc-600 group-hover:text-white transition duration-500">STORE</span>
+                    <span class="text-xl md:text-2xl font-bold text-zinc-900 dark:text-white tracking-widest uppercase">
+                        KEYZ<span class="text-zinc-400 dark:text-zinc-600 group-hover:text-zinc-900 dark:group-hover:text-white transition duration-500">STORE</span>
                     </span>
                 </a>
             </div>
@@ -16,7 +16,7 @@
                     <li>
                         <a href="{{ url_for('home.products') }}"
                            class="pb-1 border-b-2 transition-all duration-300
-                           {{ 'text-white border-white' if request.endpoint == 'home.products' and not request.view_args.get('category_id') else 'text-zinc-500 border-transparent hover:text-white' }}">
+                           {{ 'text-zinc-900 border-zinc-900 dark:text-white dark:border-white' if request.endpoint == 'home.products' and not request.view_args.get('category_id') else 'text-zinc-500 border-transparent hover:text-zinc-900 dark:hover:text-white' }}">
                             Products
                         </a>
                     </li>
@@ -24,7 +24,7 @@
                     <li>
                         <a href="{{ url_for('home.promotions') }}"
                            class="pb-1 border-b-2 transition-all duration-300
-                           {{ 'text-white border-white' if request.endpoint == 'home.promotions' else 'text-zinc-500 border-transparent hover:text-white' }}">
+                           {{ 'text-zinc-900 border-zinc-900 dark:text-white dark:border-white' if request.endpoint == 'home.promotions' else 'text-zinc-500 border-transparent hover:text-zinc-900 dark:hover:text-white' }}">
                             Promotions
                         </a>
                     </li>
@@ -32,7 +32,7 @@
                     <li class="relative dropdown group py-4">
                         <a href="{{ url_for('home.all_categories') }}"
                            class="flex items-center gap-1 pb-1 border-b-2 transition-all duration-300
-                           {{ 'text-white border-white' if request.endpoint == 'home.all_categories' or request.view_args.get('category_id') else 'text-zinc-500 border-transparent hover:text-white' }}">
+                           {{ 'text-zinc-900 border-zinc-900 dark:text-white dark:border-white' if request.endpoint == 'home.all_categories' or request.view_args.get('category_id') else 'text-zinc-500 border-transparent hover:text-zinc-900 dark:hover:text-white' }}">
                             Categories
 
                             <svg class="h-4 w-4 bg-transparent group-hover:rotate-180 transition-transform duration-300"
@@ -46,11 +46,11 @@
                             </svg>
                         </a>
 
-                        <ul class="dropdown-menu absolute hidden group-hover:block bg-black shadow-2xl rounded-xl w-56 p-2 z-50 origin-top top-full mt-0 border border-zinc-800">
+                        <ul class="dropdown-menu absolute hidden group-hover:block bg-white dark:bg-black shadow-2xl rounded-xl w-56 p-2 z-50 origin-top top-full mt-0 border border-zinc-200 dark:border-zinc-800">
                             {% for category in categories %}
                             <li>
                                 <a href="{{ url_for('home.products', category_id=category.id) }}"
-                                   class="block px-4 py-3 text-xs font-bold uppercase tracking-widest text-zinc-500 hover:bg-zinc-900 hover:text-white rounded-lg transition-colors">
+                                   class="block px-4 py-3 text-xs font-bold uppercase tracking-widest text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-900 hover:text-zinc-900 dark:hover:text-white rounded-lg transition-colors">
                                     {{ category.name }}
                                 </a>
                             </li>
@@ -67,7 +67,7 @@
                     <li class="relative dropdown group py-4">
                         <a href="{{ url_for('home.all_brands') }}"
                            class="flex items-center gap-1 pb-1 border-b-2 transition-all duration-300
-                           {{ 'text-white border-white' if request.endpoint == 'home.all_brands' or request.endpoint == 'home.brand_products' else 'text-zinc-500 border-transparent hover:text-white' }}">
+                           {{ 'text-zinc-900 border-zinc-900 dark:text-white dark:border-white' if request.endpoint == 'home.all_brands' or request.endpoint == 'home.brand_products' else 'text-zinc-500 border-transparent hover:text-zinc-900 dark:hover:text-white' }}">
                             Brands
 
                             <svg class="h-4 w-4 bg-transparent group-hover:rotate-180 transition-transform duration-300"
@@ -81,11 +81,11 @@
                             </svg>
                         </a>
 
-                        <ul class="dropdown-menu absolute hidden group-hover:block bg-black shadow-2xl rounded-xl w-56 p-2 z-50 origin-top top-full mt-0 border border-zinc-800">
+                        <ul class="dropdown-menu absolute hidden group-hover:block bg-white dark:bg-black shadow-2xl rounded-xl w-56 p-2 z-50 origin-top top-full mt-0 border border-zinc-200 dark:border-zinc-800">
                             {% for brand in brands %}
                             <li>
                                 <a href="{{ url_for('home.brand_products', brand_id=brand.id) }}"
-                                   class="block px-4 py-3 text-xs font-bold uppercase tracking-widest text-zinc-500 hover:bg-zinc-900 hover:text-white rounded-lg transition-colors">
+                                   class="block px-4 py-3 text-xs font-bold uppercase tracking-widest text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-900 hover:text-zinc-900 dark:hover:text-white rounded-lg transition-colors">
                                     {{ brand.name }}
                                 </a>
                             </li>
@@ -102,20 +102,32 @@
                 </ul>
             </nav>
 
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2 md:gap-4">
 
-                <a href="{{ url_for('home.cart') }}" class="relative p-2 text-zinc-400 hover:text-white transition-colors group">
+                <!-- Theme Toggle Button -->
+                <button id="theme-toggle-btn" class="p-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors group" aria-label="Toggle theme">
+                    <!-- Sun Icon (shown in Dark mode) -->
+                    <svg id="theme-sun-icon" class="h-5 w-5 hidden dark:block group-hover:rotate-45 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+                    </svg>
+                    <!-- Moon Icon (shown in Light mode) -->
+                    <svg id="theme-moon-icon" class="h-5 w-5 block dark:hidden group-hover:-rotate-12 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                </button>
+
+                <a href="{{ url_for('home.cart') }}" class="relative p-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors group">
                     <svg class="h-6 w-6 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
-                    <span id="global-cart-badge" class="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-bold leading-none text-black bg-white rounded-full translate-x-1/4 -translate-y-1/4 hidden">
+                    <span id="global-cart-badge" class="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-bold leading-none text-white dark:text-black bg-zinc-900 dark:bg-white rounded-full translate-x-1/4 -translate-y-1/4 hidden">
                         0
                     </span>
                 </a>
 
                 <div class="md:hidden">
                     <button id="mobile-menu-button"
-                            class="p-2 text-zinc-400 hover:text-white transition-colors">
+                            class="p-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">
                         <svg class="h-6 w-6"
                              fill="none"
                              viewBox="0 0 24 24"
@@ -133,31 +145,31 @@
     </div>
 
     <div id="mobile-menu"
-         class="hidden md:hidden border-t border-zinc-800 bg-black">
+         class="hidden md:hidden border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black transition-colors duration-300">
 
         <div class="px-4 py-4 space-y-2">
 
             <a href="{{ url_for('home.products') }}"
-               class="block rounded-xl px-4 py-3 text-sm font-bold uppercase tracking-widest
-               {{ 'bg-white text-black' if request.endpoint == 'home.products' else 'text-zinc-400 hover:bg-zinc-900 hover:text-white' }}">
+               class="block rounded-xl px-4 py-3 text-sm font-bold uppercase tracking-widest transition-all duration-300
+               {{ 'bg-zinc-900 text-white dark:bg-white dark:text-black' if request.endpoint == 'home.products' else 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900 hover:text-zinc-900 dark:hover:text-white' }}">
                 Products
             </a>
 
             <a href="{{ url_for('home.promotions') }}"
-               class="block rounded-xl px-4 py-3 text-sm font-bold uppercase tracking-widest
-               {{ 'bg-white text-black' if request.endpoint == 'home.promotions' else 'text-zinc-400 hover:bg-zinc-900 hover:text-white' }}">
+               class="block rounded-xl px-4 py-3 text-sm font-bold uppercase tracking-widest transition-all duration-300
+               {{ 'bg-zinc-900 text-white dark:bg-white dark:text-black' if request.endpoint == 'home.promotions' else 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900 hover:text-zinc-900 dark:hover:text-white' }}">
                 Promotions
             </a>
 
             <a href="{{ url_for('home.all_categories') }}"
-               class="block rounded-xl px-4 py-3 text-sm font-bold uppercase tracking-widest
-               {{ 'bg-white text-black' if request.endpoint == 'home.all_categories' else 'text-zinc-400 hover:bg-zinc-900 hover:text-white' }}">
+               class="block rounded-xl px-4 py-3 text-sm font-bold uppercase tracking-widest transition-all duration-300
+               {{ 'bg-zinc-900 text-white dark:bg-white dark:text-black' if request.endpoint == 'home.all_categories' else 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900 hover:text-zinc-900 dark:hover:text-white' }}">
                 Categories
             </a>
 
             <a href="{{ url_for('home.all_brands') }}"
-               class="block rounded-xl px-4 py-3 text-sm font-bold uppercase tracking-widest
-               {{ 'bg-white text-black' if request.endpoint == 'home.all_brands' or request.endpoint == 'home.brand_products' else 'text-zinc-400 hover:bg-zinc-900 hover:text-white' }}">
+               class="block rounded-xl px-4 py-3 text-sm font-bold uppercase tracking-widest transition-all duration-300
+               {{ 'bg-zinc-900 text-white dark:bg-white dark:text-black' if request.endpoint == 'home.all_brands' or request.endpoint == 'home.brand_products' else 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900 hover:text-zinc-900 dark:hover:text-white' }}">
                 Brands
             </a>
 
@@ -172,6 +184,21 @@
     if (mobileMenuButton && mobileMenu) {
         mobileMenuButton.addEventListener("click", function () {
             mobileMenu.classList.toggle("hidden");
+        });
+    }
+
+    // Theme Toggle Handler
+    const themeToggleBtn = document.getElementById("theme-toggle-btn");
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener("click", () => {
+            const isDark = document.documentElement.classList.contains("dark");
+            if (isDark) {
+                document.documentElement.classList.remove("dark");
+                localStorage.setItem("theme", "light");
+            } else {
+                document.documentElement.classList.add("dark");
+                localStorage.setItem("theme", "dark");
+            }
         });
     }
 

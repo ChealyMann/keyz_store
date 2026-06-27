@@ -1,7 +1,7 @@
 <div class="animate-fade-in h-full">
     <a
         href="{{ url_for('home.product_detail', product_id=product.id) }}"
-        class="group flex flex-col h-full overflow-hidden rounded-2xl border border-white/40 bg-transparent transition-all duration-500 hover:-translate-y-1 hover:border-white/60"
+        class="group flex flex-col h-full overflow-hidden rounded-2xl border border-zinc-200 dark:border-white/20 bg-white dark:bg-zinc-900/40 transition-all duration-500 hover:-translate-y-1 hover:border-zinc-400 dark:hover:border-white/40 shadow-sm dark:shadow-none"
     >
         <!-- ====================================== -->
         <!-- PRODUCT IMAGE -->
@@ -63,7 +63,7 @@
             </div>
 
             <!-- Product Name -->
-            <h3 class="text-sm md:text-[15px] font-bold text-white leading-snug mb-4 line-clamp-2 min-h-[38px]">
+            <h3 class="text-sm md:text-[15px] font-bold text-zinc-900 dark:text-white leading-snug mb-4 line-clamp-2 min-h-[38px]">
                 {{ product.name }}
             </h3>
 
@@ -89,7 +89,7 @@
                             </span>
                         {% endif %}
 
-                        <span class="text-base md:text-lg font-black text-white">
+                        <span class="text-base md:text-lg font-black text-zinc-900 dark:text-white">
                             {{ product.promotion_price_text }}
                         </span>
 
@@ -97,11 +97,11 @@
                     {% else %}
 
                         {% if product.price_text %}
-                            <span class="text-base md:text-lg font-black text-white">
+                            <span class="text-base md:text-lg font-black text-zinc-900 dark:text-white">
                                 {{ product.price_text }}
                             </span>
                         {% else %}
-                            <span class="text-base md:text-lg font-black text-white">
+                            <span class="text-base md:text-lg font-black text-zinc-900 dark:text-white">
                                 ${{ "%.2f"|format(product.price) }}
                             </span>
                         {% endif %}
@@ -110,7 +110,7 @@
 
                 </div>
 
-                <div class="hidden sm:flex w-8 h-8 rounded-full border border-white/20 items-center justify-center text-white group-hover:bg-white group-hover:text-black group-hover:border-white transition-all duration-300 shrink-0">
+                <div class="hidden sm:flex w-8 h-8 rounded-full border border-zinc-200 dark:border-white/20 items-center justify-center text-zinc-900 dark:text-white group-hover:bg-zinc-950 dark:group-hover:bg-white group-hover:text-white dark:group-hover:text-black group-hover:border-zinc-950 dark:group-hover:border-white transition-all duration-300 shrink-0">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path
                             stroke-linecap="round"

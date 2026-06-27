@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
 <!-- ==================== HEAD SECTION ==================== -->
 
 <head>
@@ -10,12 +10,26 @@
 
     <!-- External Scripts & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
+    <script>
+        // Check local storage or system preference to set initial theme class
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
     <link
             href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Mono&display=swap"
             rel="stylesheet"
     />
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/style.css') }}"/>
 
     <!-- ========== CUSTOM STYLES ========== -->
     <style>
@@ -33,9 +47,10 @@
 
         body {
             font-family: "Inter", sans-serif;
-            background-color: #09090b;
-            color: #e4e4e7;
+            background-color: var(--bg);
+            color: var(--ink);
             padding-bottom: 80px;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         @media (min-width: 768px) {
