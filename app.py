@@ -64,10 +64,6 @@ migrate = Migrate(app, db)
 cache.init_app(app)
 limiter.init_app(app)
 
-# Create database tables automatically if they do not exist
-with app.app_context():
-    db.create_all()
-
 # ------------------------------------------------------------
 # Register blueprints
 # ------------------------------------------------------------
