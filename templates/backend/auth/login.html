@@ -1,0 +1,87 @@
+{% extends "backend/auth/base.html" %}
+
+{% block content %}
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <style>
+        .font-khmer { font-family: 'Kantumruy Pro', sans-serif; }
+        /* Custom Checkbox Color for B&W Theme */
+        .form-checkbox:checked {
+            background-color: #fff;
+            border-color: #fff;
+        }
+        .form-checkbox:checked:focus {
+            --tw-ring-color: #fff;
+        }
+    </style>
+
+    <div class="font-khmer w-full max-w-md bg-black rounded-2xl shadow-2xl border border-zinc-800 overflow-hidden relative">
+        <div class="p-8 md:p-10">
+
+            <div class="flex justify-center mb-8">
+                <img src="{{ url_for('static', filename='logo/keyz.jpg') }}" alt="Keyzstore Logo"
+                     class="h-16 w-auto object-contain grayscale opacity-90">
+            </div>
+
+            <div class="text-center mb-8">
+                <h2 class="text-2xl leading-tight font-bold text-white uppercase tracking-widest">
+                    ចូលប្រើប្រាស់គណនី
+                </h2>
+                <p class="text-xs text-zinc-500 mt-2 uppercase tracking-widest">Welcome back to Keyzstore</p>
+            </div>
+
+            <form method="POST" action="" class="space-y-6">
+
+                {{ form.hidden_tag() }}
+
+                <div>
+                    {{ form.username.label(text="ឈ្មោះ", class="block text-zinc-400 text-xs font-bold mb-2 uppercase tracking-widest") }}
+                    {{ form.username(class="bg-zinc-900 appearance-none border border-zinc-800 rounded-xl w-full py-3.5 px-4 text-white leading-tight focus:outline-none focus:ring-1 focus:ring-white focus:border-white transition-all") }}
+                    {% for error in form.username.errors %}
+                        <span class="text-white text-xs font-medium mt-2 block bg-zinc-800 px-3 py-1.5 rounded">{{ error }}</span>
+                    {% endfor %}
+                </div>
+
+                <div>
+                    {{ form.password.label(text="ពាក្យសម្ងាត់", class="block text-zinc-400 text-xs font-bold mb-2 uppercase tracking-widest") }}
+                    {{ form.password(class="bg-zinc-900 appearance-none border border-zinc-800 rounded-xl w-full py-3.5 px-4 text-white leading-tight focus:outline-none focus:ring-1 focus:ring-white focus:border-white transition-all") }}
+                    {% for error in form.password.errors %}
+                        <span class="text-white text-xs font-medium mt-2 block bg-zinc-800 px-3 py-1.5 rounded">{{ error }}</span>
+                    {% endfor %}
+                </div>
+
+                <div class="flex items-center justify-end">
+                    <a href="{{ url_for('request_password_reset') if 'request_password_reset' in url_for.__globals__ else '#' }}"
+                       class="text-xs text-zinc-400 hover:text-white font-bold uppercase tracking-widest transition-colors">
+                        ភ្លេចពាក្យសម្ងាត់?
+                    </a>
+                </div>
+
+                {% if form.remember %}
+                    <div class="flex items-center">
+                        {{ form.remember(class="h-4 w-4 bg-zinc-900 border-zinc-700 text-black focus:ring-white rounded form-checkbox transition-colors") }}
+                        {{ form.remember.label(text="ចងចាំខ្ញុំ", class="ml-3 block text-xs text-zinc-400 font-bold uppercase tracking-widest") }}
+                    </div>
+                {% endif %}
+
+                <div class="pt-2">
+                    <button type="submit"
+                            class="w-full bg-white hover:bg-zinc-200 text-black font-bold text-xs uppercase tracking-widest py-4 px-4 rounded-full transition-transform active:scale-[0.98]">
+                        ចូលប្រើ
+                    </button>
+                </div>
+
+                <div class="mt-8 text-center border-t border-zinc-800 pt-6">
+                    <p class="text-xs text-zinc-500 uppercase tracking-widest">
+                        មិនទាន់មានគណនី?
+                        <a href="{{ url_for('auth.register') }}"
+                           class="text-white font-bold hover:text-zinc-300 underline ml-1">
+                            ចុះឈ្មោះ
+                        </a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

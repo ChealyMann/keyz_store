@@ -1,0 +1,118 @@
+<footer
+    class="hidden md:block fixed bottom-0 left-0 right-0 z-40 border-t border-white/10 bg-[#09090b]/90 backdrop-blur-xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex items-center justify-between text-xs text-gray-500">
+
+        <!-- Left: Brand + Copyright -->
+        <div class="flex items-center gap-6">
+{#            <span class="text-white font-bold tracking-tight text-sm">#}
+{#                KEYZ<span class="text-gray-500">STORE</span>#}
+{#            </span>#}
+
+{#            <span>#}
+{#                &copy; 2026 KEYZSTORE. All rights reserved.#}
+{#            </span>#}
+        </div>
+
+        <!-- Right: Social + Contact -->
+        <div class="flex items-center gap-5">
+
+            <!-- Facebook -->
+            <a href="https://www.facebook.com/share/1DkprWscyi/"
+               target="_blank"
+               class="flex items-center gap-1.5 hover:text-white transition">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.84c0-2.51 1.49-3.89 3.77-3.89 1.09 0 2.23.19 2.23.19v2.45h-1.26c-1.24 0-1.63.77-1.63 1.56v1.87h2.78l-.44 2.91h-2.34V22c4.78-.76 8.45-4.92 8.45-9.94z"/>
+                </svg>
+                <span>Facebook</span>
+            </a>
+
+            <!-- TikTok -->
+            <a href="https://www.tiktok.com/@keyzstore1?_r=1&_t=ZS-96JtYC1k0ay"
+               target="_blank"
+               class="flex items-center gap-1.5 hover:text-white transition">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M16.6 5.82c1.03.74 2.27 1.18 3.61 1.22v3.07c-1.27-.03-2.47-.28-3.61-.77v5.55c0 3.73-3.03 6.76-6.76 6.76S3.08 18.62 3.08 14.89s3.03-6.76 6.76-6.76c.43 0 .84.04 1.24.12v3.2c-.38-.14-.8-.22-1.24-.22-2.02 0-3.66 1.64-3.66 3.66s1.64 3.66 3.66 3.66 3.66-1.64 3.66-3.66V2h3.1c.18 1.54.92 2.87 2 3.82z"/>
+                </svg>
+                <span>TikTok</span>
+            </a>
+
+            <!-- Telegram -->
+            <a href="http://t.me/Keyz_Store"
+               target="_blank"
+               class="flex items-center gap-1.5 hover:text-white transition">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M9.04 15.47 8.7 20.2c.49 0 .7-.21.96-.46l2.3-2.2 4.77 3.49c.87.48 1.49.23 1.72-.8L21.58 5.5c.31-1.45-.52-2.02-1.37-1.67L2.4 10.68c-1.4.55-1.38 1.33-.24 1.68l4.55 1.42L17.29 7.1c.5-.33.95-.15.58.18l-8.83 8.19z"/>
+                </svg>
+                <span>Telegram</span>
+            </a>
+
+            <!-- Phone -->
+            <div class="flex items-center gap-2 text-gray-400">
+                <svg class="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M3 5a2 2 0 012-2h3.28a1 1 0 01.95.68l1.5 4.49a1 1 0 01-.5 1.21l-2.26 1.13a11.04 11.04 0 005.52 5.52l1.13-2.26a1 1 0 011.21-.5l4.49 1.5a1 1 0 01.68.95V19a2 2 0 01-2 2h-1C9.72 21 3 14.28 3 6V5z"/>
+                </svg>
+
+                <a href="tel:0972614272" class="hover:text-white transition">
+                    097 261 4272
+                </a>
+
+                <span class="text-gray-700">/</span>
+
+                <a href="tel:016805828" class="hover:text-white transition">
+                    016 805 828
+                </a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+{% if request.endpoint != 'home.product_detail' %}
+<div
+    class="fixed bottom-0 left-0 right-0 bg-[#09090b]/90 backdrop-blur-xl border-t border-white/10 md:hidden z-50 pb-[env(safe-area-inset-bottom)]">
+    <div class="grid grid-cols-4 h-16 items-center">
+
+        <!-- Home -->
+        <a href="{{ url_for('home.home') }}"
+            class="flex flex-col items-center justify-center {{ 'text-white' if request.endpoint == 'home.home' else 'text-gray-500 hover:text-white' }} group">
+            <svg class="h-6 w-6 group-active:scale-90 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            <span class="text-[10px] font-medium mt-1">Home</span>
+        </a>
+
+        <!-- Shop -->
+        <a href="{{ url_for('home.products') }}"
+            class="flex flex-col items-center justify-center {{ 'text-white' if request.endpoint == 'home.products' else 'text-gray-500 hover:text-white' }} group">
+            <svg class="h-6 w-6 group-active:scale-90 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2z" />
+            </svg>
+            <span class="text-[10px] font-medium mt-1">Shop</span>
+        </a>
+
+        <!-- Category -->
+        <a href="{{ url_for('home.all_categories') }}"
+           class="flex flex-col items-center justify-center {{ 'text-white' if request.endpoint == 'home.all_categories' else 'text-gray-500 hover:text-white' }} group">
+            <svg class="h-6 w-6 group-active:scale-90 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+            </svg>
+            <span class="text-[10px] font-medium mt-1">Category</span>
+        </a>
+
+        <!-- Promotion -->
+        <a href="{{ url_for('home.promotions') }}"
+           class="flex flex-col items-center justify-center {{ 'text-white' if request.endpoint == 'home.promotions' else 'text-gray-500 hover:text-white' }} group">
+            <svg class="h-6 w-6 group-active:scale-90 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+            </svg>
+            <span class="text-[10px] font-medium mt-1">Promotion</span>
+        </a>
+    </div>
+</div>
+{% endif %}

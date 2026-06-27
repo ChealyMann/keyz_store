@@ -1,0 +1,586 @@
+{% extends "frontend/main.html" %}
+
+{% block content %}
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap');
+
+        .cart-page {
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .serif {
+            font-family: 'DM Serif Display', serif;
+        }
+
+        .surface-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .qty-btn {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .qty-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .checkout-btn {
+            background: #ffffff;
+            color: #000000;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .checkout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.15);
+        }
+
+        .delivery-option {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .delivery-option:hover {
+            border-color: rgba(56, 189, 248, 0.45);
+            background: rgba(56, 189, 248, 0.06);
+        }
+
+        .delivery-option input {
+            accent-color: #38bdf8;
+        }
+
+        .delivery-option.is-selected {
+            border-color: #38bdf8 !important;
+            background: rgba(56, 189, 248, 0.12) !important;
+            box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.2);
+        }
+
+        .delivery-option.is-selected p:first-child {
+            color: #7dd3fc;
+        }
+
+        .store-map-box {
+            display: none;
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            background: rgba(56, 189, 248, 0.08);
+        }
+
+        .store-map-box.show {
+            display: block;
+        }
+    </style>
+
+    <div class="cart-page max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-24">
+
+        <div class="flex items-center gap-3 mb-10">
+            <h1 class="serif text-4xl text-white">Your Cart</h1>
+
+            <span id="cart-item-count"
+                  class="bg-zinc-800 text-zinc-300 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest hidden">
+            </span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+
+            <!-- Cart Items -->
+            <div class="lg:col-span-8">
+                <div id="empty-cart-msg" class="text-center py-20 surface-card rounded-2xl hidden">
+                    <svg class="w-16 h-16 mx-auto text-zinc-600 mb-4" fill="none" viewBox="0 0 24 24"
+                         stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                              d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                    </svg>
+
+                    <h2 class="text-xl font-bold text-white mb-2">Your cart is empty</h2>
+                    <p class="text-zinc-500 mb-6">Looks like you haven't added anything yet.</p>
+
+                    <a href="{{ url_for('home.products') }}"
+                       class="inline-block bg-white text-black font-bold px-6 py-3 rounded-xl text-sm hover:brightness-90 transition-all">
+                        Continue Shopping
+                    </a>
+                </div>
+
+                <div id="cart-items-container" class="space-y-4"></div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="lg:col-span-4" id="order-summary-box">
+                <div class="surface-card p-6 rounded-2xl sticky top-24">
+                    <h3 class="text-white mb-6 uppercase tracking-widest text-xs font-bold border-b border-zinc-800 pb-4">
+                        Order Summary
+                    </h3>
+
+                    <div class="flex justify-between items-center mb-4 text-sm">
+                        <span class="text-zinc-400">Subtotal</span>
+                        <span id="cart-subtotal" class="text-white font-medium">$0.00</span>
+                    </div>
+
+                    <!-- Delivery Options -->
+                    <div class="mb-6">
+                        <p class="text-zinc-400 text-sm mb-3">Delivery Option</p>
+
+                        <div class="space-y-3">
+
+                            <!-- Standard Delivery -->
+                            <label class="delivery-option flex items-center justify-between gap-3 border border-zinc-800 rounded-xl p-3">
+                                <div class="flex items-center gap-3">
+                                    <input type="radio"
+                                           name="delivery_option"
+                                           value="standard"
+                                           checked
+                                           class="delivery-radio">
+
+                                    <div>
+                                        <p class="text-white text-sm font-semibold">Standard Delivery</p>
+                                        <p class="text-zinc-500 text-xs">ដឹកធម្មតា</p>
+                                    </div>
+                                </div>
+
+                                <span class="text-white text-sm font-bold">$2.0</span>
+                            </label>
+
+                            <!-- Grab Delivery -->
+                            <label class="delivery-option flex items-center justify-between gap-3 border border-zinc-800 rounded-xl p-3">
+                                <div class="flex items-center gap-3">
+                                    <input type="radio"
+                                           name="delivery_option"
+                                           value="grab"
+                                           class="delivery-radio">
+
+                                    <div>
+                                        <p class="text-white text-sm font-semibold">Grab Delivery</p>
+                                        <p class="text-zinc-500 text-xs">តម្លៃគិតតាម Grab</p>
+                                    </div>
+                                </div>
+
+                                <span class="text-emerald-400 text-xs font-bold">Confirm Later</span>
+                            </label>
+
+                            <!-- Pick Up At Store -->
+                            <label class="delivery-option flex items-center justify-between gap-3 border border-zinc-800 rounded-xl p-3">
+                                <div class="flex items-center gap-3">
+                                    <input type="radio"
+                                           name="delivery_option"
+                                           value="pickup"
+                                           class="delivery-radio">
+
+                                    <div>
+                                        <p class="text-white text-sm font-semibold">Pick Up At Store</p>
+                                        <p class="text-zinc-500 text-xs">មកយកនៅហាង</p>
+                                    </div>
+                                </div>
+
+                                <span class="text-sky-400 text-xs font-bold">Free</span>
+                            </label>
+
+                            <!-- Store Google Map Box -->
+                            <div id="store-map-box" class="store-map-box rounded-xl p-4">
+                                <p class="text-sky-300 text-sm font-bold mb-1">
+                                    Store Location
+                                </p>
+
+                                <p class="text-zinc-400 text-xs mb-3">
+                                    Please open Google Maps to come pick up your order at our store.
+                                </p>
+
+                                <a href="https://maps.app.goo.gl/UbQzxTQoaJxDk3np6"
+                                   target="_blank"
+                                   class="inline-flex items-center justify-center w-full bg-sky-400 text-black font-bold text-sm py-3 rounded-xl hover:bg-sky-300 transition-all">
+                                    Open Store Location
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center mb-6 text-sm">
+                        <span class="text-zinc-400">Delivery Fee</span>
+                        <span id="delivery-fee" class="text-white font-medium">$2.0</span>
+                    </div>
+
+                    <div class="border-t border-zinc-800 pt-4 mb-8 flex justify-between items-end">
+                        <span class="text-white font-bold">Total</span>
+                        <span id="cart-total" class="text-2xl font-bold text-white">$0.00</span>
+                    </div>
+
+                    <button id="checkout-btn"
+                            class="checkout-btn w-full py-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5 text-[#2AABEE]" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.638z"/>
+                        </svg>
+
+                        Checkout via Telegram
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('cart-items-container');
+            const emptyMsg = document.getElementById('empty-cart-msg');
+            const summaryBox = document.getElementById('order-summary-box');
+            const countBadge = document.getElementById('cart-item-count');
+            const subtotalEl = document.getElementById('cart-subtotal');
+            const totalEl = document.getElementById('cart-total');
+            const deliveryFeeEl = document.getElementById('delivery-fee');
+            const checkoutBtn = document.getElementById('checkout-btn');
+            const deliveryRadios = document.querySelectorAll('.delivery-radio');
+            const storeMapBox = document.getElementById('store-map-box');
+
+            const STORE_MAP_URL = 'https://maps.app.goo.gl/UbQzxTQoaJxDk3np6';
+
+            let cart = JSON.parse(localStorage.getItem('keyz_cart')) || [];
+
+            function money(value) {
+                const number = Number(value) || 0;
+                return `$${number.toFixed(2)}`;
+            }
+
+            function safeText(value, fallback = '') {
+                if (value === null || value === undefined || value === 'None') {
+                    return fallback;
+                }
+
+                return String(value).trim() || fallback;
+            }
+
+            function getSelectedDelivery() {
+                const selected = document.querySelector('input[name="delivery_option"]:checked');
+
+                if (!selected) {
+                    return {
+                        type: 'standard',
+                        nameEn: 'Standard Delivery',
+                        nameKh: 'ដឹកជញ្ជូនធម្មតា',
+                        fee: 2.0,
+                        feeText: '$2.0',
+                        mapUrl: ''
+                    };
+                }
+
+                if (selected.value === 'grab') {
+                    return {
+                        type: 'grab',
+                        nameEn: 'Grab Delivery',
+                        nameKh: 'ដឹកជញ្ជូនតាម Grab',
+                        fee: 0,
+                        feeText: 'គិតតាម Grab',
+                        mapUrl: ''
+                    };
+                }
+
+                if (selected.value === 'pickup') {
+                    return {
+                        type: 'pickup',
+                        nameEn: 'Pick Up At Store',
+                        nameKh: 'មកយកនៅហាង',
+                        fee: 0,
+                        feeText: 'Free',
+                        mapUrl: STORE_MAP_URL
+                    };
+                }
+
+                return {
+                    type: 'standard',
+                    nameEn: 'Standard Delivery',
+                    nameKh: 'ដឹកជញ្ជូនធម្មតា',
+                    fee: 2.0,
+                    feeText: '$2.0',
+                    mapUrl: ''
+                };
+            }
+
+            function getCartSubtotal() {
+                let subtotal = 0;
+
+                cart.forEach(item => {
+                    const price = Number(item.price) || 0;
+                    const quantity = Number(item.quantity) || 1;
+
+                    subtotal += price * quantity;
+                });
+
+                return subtotal;
+            }
+
+            function updateDeliveryUI() {
+                const selected = document.querySelector('input[name="delivery_option"]:checked');
+
+                document.querySelectorAll('.delivery-option').forEach(option => {
+                    option.classList.remove('is-selected');
+                });
+
+                if (!selected) {
+                    return;
+                }
+
+                const selectedCard = selected.closest('.delivery-option');
+
+                if (selectedCard) {
+                    selectedCard.classList.add('is-selected');
+                }
+
+                if (selected.value === 'pickup') {
+                    storeMapBox.classList.add('show');
+                } else {
+                    storeMapBox.classList.remove('show');
+                }
+            }
+
+            function updateSummary() {
+                const subtotal = getCartSubtotal();
+                const delivery = getSelectedDelivery();
+
+                let finalTotal = subtotal;
+
+                if (delivery.type === 'standard') {
+                    finalTotal += delivery.fee;
+
+                    deliveryFeeEl.textContent = money(delivery.fee);
+                    totalEl.textContent = money(finalTotal);
+                } else if (delivery.type === 'grab') {
+                    deliveryFeeEl.textContent = delivery.feeText;
+                    totalEl.textContent = `${money(subtotal)} + Grab`;
+                } else if (delivery.type === 'pickup') {
+                    deliveryFeeEl.textContent = 'Free';
+                    totalEl.textContent = money(subtotal);
+                }
+
+                subtotalEl.textContent = money(subtotal);
+
+                updateDeliveryUI();
+            }
+
+            function saveCart() {
+                localStorage.setItem('keyz_cart', JSON.stringify(cart));
+
+                if (window.updateGlobalCartBadge) {
+                    window.updateGlobalCartBadge();
+                }
+
+                renderCart();
+            }
+
+            function getImageSrc(image) {
+                let imgSrc = safeText(image);
+
+                if (!imgSrc) {
+                    return 'https://via.placeholder.com/400x400?text=No+Image';
+                }
+
+                if (imgSrc.startsWith('http') || imgSrc.startsWith('/')) {
+                    return imgSrc;
+                }
+
+                return `/static/images/${imgSrc}`;
+            }
+
+            function renderCart() {
+                container.innerHTML = '';
+
+                if (cart.length === 0) {
+                    emptyMsg.classList.remove('hidden');
+                    summaryBox.classList.add('hidden');
+                    countBadge.classList.add('hidden');
+
+                    subtotalEl.textContent = '$0.00';
+                    deliveryFeeEl.textContent = '$0.00';
+                    totalEl.textContent = '$0.00';
+
+                    return;
+                }
+
+                emptyMsg.classList.add('hidden');
+                summaryBox.classList.remove('hidden');
+
+                let totalItems = 0;
+
+                cart.forEach((item, index) => {
+                    const name = safeText(item.name, 'Unnamed Product');
+                    const optionsText = safeText(item.optionsText, 'Standard');
+                    const price = Number(item.price) || 0;
+                    const quantity = Number(item.quantity) || 1;
+
+                    totalItems += quantity;
+
+                    const imgSrc = getImageSrc(item.image);
+
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'surface-card p-4 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center gap-4';
+
+                    itemDiv.innerHTML = `
+                        <div class="w-20 h-20 bg-zinc-900 rounded-xl overflow-hidden flex-shrink-0 border border-zinc-800">
+                            <img src="${imgSrc}" class="w-full h-full object-cover" alt="${name}">
+                        </div>
+
+                        <div class="flex-1 min-w-0">
+                            <a href="/product_detail/${item.productId}" class="text-white font-bold hover:text-zinc-300 transition-colors line-clamp-1">
+                                ${name}
+                            </a>
+
+                            <p class="text-xs text-zinc-500 mt-1 uppercase tracking-wider font-semibold">
+                                ${optionsText}
+                            </p>
+
+                            <p class="text-[var(--accent)] font-bold mt-1 text-sm">
+                                ${money(price)}
+                            </p>
+                        </div>
+
+                        <div class="flex items-center gap-6 w-full sm:w-auto justify-between sm:justify-end mt-2 sm:mt-0 pt-3 sm:pt-0 border-t border-zinc-800 sm:border-0">
+                            <div class="flex items-center gap-3">
+                                <button class="qty-btn dec-btn" data-index="${index}">−</button>
+
+                                <span class="text-white font-semibold text-sm w-6 text-center select-none">
+                                    ${quantity}
+                                </span>
+
+                                <button class="qty-btn inc-btn" data-index="${index}">+</button>
+                            </div>
+
+                            <button class="remove-btn text-zinc-500 hover:text-red-400 transition-colors p-2" data-index="${index}">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+                        </div>
+                    `;
+
+                    container.appendChild(itemDiv);
+                });
+
+                countBadge.textContent = `${totalItems} ${totalItems > 1 ? 'Items' : 'Item'}`;
+                countBadge.classList.remove('hidden');
+
+                updateSummary();
+
+                document.querySelectorAll('.inc-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const idx = Number(e.currentTarget.dataset.index);
+
+                        cart[idx].quantity = (Number(cart[idx].quantity) || 1) + 1;
+
+                        saveCart();
+                    });
+                });
+
+                document.querySelectorAll('.dec-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const idx = Number(e.currentTarget.dataset.index);
+
+                        if ((Number(cart[idx].quantity) || 1) > 1) {
+                            cart[idx].quantity = (Number(cart[idx].quantity) || 1) - 1;
+                        } else {
+                            cart.splice(idx, 1);
+                        }
+
+                        saveCart();
+                    });
+                });
+
+                document.querySelectorAll('.remove-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const idx = Number(e.currentTarget.dataset.index);
+
+                        cart.splice(idx, 1);
+
+                        saveCart();
+                    });
+                });
+            }
+
+            function buildTelegramMessage() {
+                let subtotal = 0;
+                const delivery = getSelectedDelivery();
+
+                let message = `🛒 KEYZ STORE ORDER\n`;
+                message += `━━━━━━━━━━━━━━\n\n`;
+
+                cart.forEach((item, index) => {
+                    const name = safeText(item.name, 'មិនមានឈ្មោះ');
+                    const optionsText = safeText(item.optionsText, 'Standard');
+                    const price = Number(item.price) || 0;
+                    const quantity = Number(item.quantity) || 1;
+                    const itemTotal = price * quantity;
+
+                    subtotal += itemTotal;
+
+                    message += `${index + 1}. ${name}\n`;
+
+                    if (optionsText && optionsText !== 'Standard') {
+                        message += `   Option: ${optionsText}\n`;
+                    }
+
+                    message += `   Qty: ${quantity}\n`;
+                    message += `   Price: ${money(price)}\n`;
+                    message += `   Total: ${money(itemTotal)}\n\n`;
+                });
+
+                message += `━━━━━━━━━━━━━━\n`;
+                message += `Subtotal: ${money(subtotal)}\n`;
+
+                if (delivery.type === 'standard') {
+                    const finalTotal = subtotal + delivery.fee;
+
+                    message += `Delivery: ${delivery.nameKh}\n`;
+                    message += `Delivery Fee: ${money(delivery.fee)}\n`;
+                    message += `Grand Total: ${money(finalTotal)}\n`;
+                } else if (delivery.type === 'grab') {
+                    message += `Delivery: ${delivery.nameKh}\n`;
+                    message += `Grand Total: ${money(subtotal)} + Grab Fee\n`;
+                } else if (delivery.type === 'pickup') {
+                    message += `Delivery: ${delivery.nameKh}\n`;
+                    message += `Delivery Fee: Free\n`;
+                    message += `Grand Total: ${money(subtotal)}\n`;
+                    message += `Store Map: ${STORE_MAP_URL}\n`;
+                }
+
+                message += `━━━━━━━━━━━━━━\n`;
+                message += `🙏 Thank you for your order!`;
+
+                return message;
+            }
+
+            deliveryRadios.forEach(radio => {
+                radio.addEventListener('change', () => {
+                    updateSummary();
+                    updateDeliveryUI();
+                });
+            });
+
+            checkoutBtn.addEventListener('click', () => {
+                if (cart.length === 0) {
+                    return;
+                }
+
+                const message = buildTelegramMessage();
+
+                /*
+                    Telegram username:
+                    Change Keyz_Store to your real Telegram username if needed.
+                */
+                const telegramUsername = 'Keyz_Store';
+                const tgUrl = `https://t.me/${telegramUsername}?text=${encodeURIComponent(message)}`;
+
+                window.open(tgUrl, '_blank');
+            });
+
+            renderCart();
+            updateDeliveryUI();
+        });
+    </script>
+{% endblock %}

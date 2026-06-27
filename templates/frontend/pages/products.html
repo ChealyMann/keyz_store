@@ -1,0 +1,560 @@
+{% extends "frontend/main.html" %}
+
+{% block head %}
+    <!-- ====================================== -->
+    <!-- PRELOAD FIRST 5 VISIBLE PRODUCT IMAGES -->
+    <!-- Eagerly fetch above-the-fold images    -->
+    <!-- so they appear instantly on page load  -->
+    <!-- ====================================== -->
+    {% set preload_count = namespace(value=0) %}
+    {% for group in brand_groups %}
+        {% for product in group.products %}
+            {% if preload_count.value < 5 and product.image %}
+                <link
+                    rel="preload"
+                    as="image"
+                    href="{{ url_for('static', filename='images/resized_' + product.image) }}"
+                    fetchpriority="high"
+                >
+                {% set preload_count.value = preload_count.value + 1 %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+
+    <!-- ====================================== -->
+    <!-- PAGE STYLES -->
+    <!-- ====================================== -->
+    <style>
+        /* Fade-in animation for product sections */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        /* Main loading overlay */
+        .loading-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(9, 9, 11, 0.72);
+            z-index: 50;
+            backdrop-filter: blur(3px);
+        }
+
+        /* Brand section title line */
+        .brand-title-line {
+            width: 95px;
+            height: 3px;
+            background: linear-gradient(to right, #ffffff, rgba(255, 255, 255, 0.15));
+            border-radius: 999px;
+        }
+
+        /* Hide horizontal scrollbar */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* ====================================== */
+        /* IMAGE SKELETON SHIMMER                 */
+        /* Shows while product images are loading */
+        /* ====================================== */
+        @keyframes shimmer {
+            0%   { background-position: -700px 0; }
+            100% { background-position:  700px 0; }
+        }
+
+        .img-skeleton {
+            background: linear-gradient(
+                90deg,
+                rgba(255,255,255,0.04) 25%,
+                rgba(255,255,255,0.10) 50%,
+                rgba(255,255,255,0.04) 75%
+            );
+            background-size: 700px 100%;
+            animation: shimmer 1.4s infinite linear;
+        }
+
+        /* Fade image in once it has loaded */
+        .product-img {
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+        .product-img.loaded {
+            opacity: 1;
+        }
+    </style>
+
+    <!-- ====================================== -->
+    <!-- PRODUCTS PAGE CONTAINER -->
+    <!-- ====================================== -->
+    <div class="px-4 sm:px-6 lg:px-8 py-8 max-w-[1800px] mx-auto">
+
+        <!-- ====================================== -->
+        <!-- FILTERS SECTION -->
+        <!-- Search + Categories -->
+        <!-- ====================================== -->
+        <div id="filtersContainer" class="mb-5 space-y-4">
+
+            <!-- ====================================== -->
+            <!-- SEARCH INPUT -->
+            <!-- ====================================== -->
+            <div class="relative max-w-lg mx-auto md:mx-0">
+                <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search products..."
+                        class="w-full bg-[#18181b]/50 border border-white/10 rounded-full py-2.5 pl-10 pr-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/20 transition-all"
+                >
+
+                <!-- Search icon -->
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                        />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- ====================================== -->
+            <!-- CATEGORY BUTTONS -->
+            <!-- ====================================== -->
+            <div
+                    class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide"
+                    id="categoryContainer"
+            >
+                <!-- All category button -->
+                <button
+                        type="button"
+                        onclick="filterCategory(null, this)"
+                        class="category-btn whitespace-nowrap px-5 py-2 rounded-full text-xs font-medium border transition-all duration-300 {{ 'bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.3)] border-transparent scale-105' if not current_category else 'bg-white/5 text-gray-400 border-white/10 hover:bg-white/10 hover:text-white hover:border-white/20' }}"
+                >
+                    All
+                </button>
+
+                <!-- Dynamic category buttons -->
+                {% for cat in categories %}
+                    <button
+                            type="button"
+                            onclick="filterCategory({{ cat.id }}, this)"
+                            class="category-btn whitespace-nowrap px-5 py-2 rounded-full text-xs font-medium border transition-all duration-300 {{ 'bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.3)] border-transparent scale-105' if current_category == cat.id else 'bg-white/5 text-gray-400 border-white/10 hover:bg-white/10 hover:text-white hover:border-white/20' }}"
+                    >
+                        {{ cat.name }}
+                    </button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- ====================================== -->
+        <!-- PRODUCTS + LOADING SECTION -->
+        <!-- ====================================== -->
+        <div class="relative min-h-[300px]">
+
+            <!-- ====================================== -->
+            <!-- MAIN LOADING OVERLAY -->
+            <!-- Shows when searching/filtering -->
+            <!-- ====================================== -->
+            <div
+                    id="loadingSpinner"
+                    class="loading-overlay hidden flex justify-center items-center rounded-2xl transition-all duration-300"
+            >
+                <div class="animate-spin rounded-full h-10 w-10 border-4 border-white/20 border-t-white"></div>
+            </div>
+
+            <!-- ====================================== -->
+            <!-- PRODUCT GRID SECTIONS -->
+            <!-- Product cards are loaded from product_grid.html -->
+            <!-- ====================================== -->
+            <div
+                    id="productSections"
+                    class="space-y-12 transition-opacity duration-300"
+            >
+                {% include 'frontend/layouts/product_grid.html' %}
+            </div>
+
+            <!-- ====================================== -->
+            <!-- INFINITE SCROLL TRIGGER -->
+            <!-- Used to detect bottom scroll and load more products -->
+            <!-- ====================================== -->
+            <div
+                    id="infiniteScrollTrigger"
+                    class="flex justify-center items-center w-full mt-2 py-0 lg:py-8 opacity-0 transition-opacity duration-300"
+            ></div>
+        </div>
+    </div>
+
+    <!-- ====================================== -->
+    <!-- PRODUCTS PAGE JAVASCRIPT -->
+    <!-- Search, category filter, AJAX loading, infinite scroll -->
+    <!-- ====================================== -->
+    <script>
+        // ======================================
+        // Global State Variables
+        // ======================================
+        let currentCategory = {{ current_category|tojson }};
+        let currentPage = 1;
+        let hasNext = {{ pagination.has_next|tojson }};
+        let isLoading = false;
+        let searchTimeout = null;
+        let loadedProductCount = {{ products|length }};
+
+        // ======================================
+        // DOM Elements
+        // ======================================
+        const trigger = document.getElementById("infiniteScrollTrigger");
+        const productSections = document.getElementById("productSections");
+        const mainLoader = document.getElementById("loadingSpinner");
+        const searchInput = document.getElementById("searchInput");
+
+        // ======================================
+        // IntersectionObserver — lazy image loader
+        // ======================================
+        // Images in product_card.html use data-src instead of src.
+        // The observer watches each img; when it scrolls within
+        // 300 px of the viewport it swaps data-src → src, waits for
+        // load, then fades the image in and removes the skeleton.
+        // ======================================
+        const imageObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+
+                const img = entry.target;
+                const src = img.dataset.src;
+
+                if (src) {
+                    img.src = src;
+
+                    img.onload = () => {
+                        img.classList.add("loaded");
+                        img.closest(".img-skeleton")?.classList.remove("img-skeleton");
+                    };
+
+                    img.onerror = () => {
+                        // Still reveal on error so the alt text shows
+                        img.classList.add("loaded");
+                    };
+
+                    imageObserver.unobserve(img);
+                }
+            });
+        }, {
+            rootMargin: "300px"  // load 300 px before entering viewport
+        });
+
+        // ======================================
+        // Observe all [data-src] images inside a container
+        // Called after initial render and after every AJAX inject
+        // ======================================
+        function observeImages(container = document) {
+            container.querySelectorAll("img[data-src]").forEach(img => {
+                imageObserver.observe(img);
+            });
+        }
+
+        // Observe images already on the page from server-side render
+        observeImages();
+
+        // ======================================
+        // Bottom Loading Spinner HTML
+        // Used when infinite scroll loads more products
+        // ======================================
+        function bottomSpinnerHtml() {
+            return `
+            <div class="animate-spin rounded-full h-8 w-8 border-4 border-white/20 border-t-white"></div>
+        `;
+        }
+
+        // ======================================
+        // Hide Infinite Scroll Trigger
+        // ======================================
+        function hideTrigger() {
+            trigger.innerHTML = "";
+            trigger.classList.add("opacity-0");
+        }
+
+        // ======================================
+        // Show Bottom Spinner
+        // ======================================
+        function showBottomSpinner() {
+            trigger.innerHTML = bottomSpinnerHtml();
+            trigger.classList.remove("opacity-0");
+        }
+
+        // ======================================
+        // Show No More Products Message
+        // ======================================
+        function showNoMoreProducts() {
+            trigger.innerHTML = `
+            <span class="text-zinc-500 text-sm font-medium">
+                No more products to load
+            </span>
+        `;
+            trigger.classList.remove("opacity-0");
+        }
+
+        // ======================================
+        // Set Active Category Button
+        // Reset all buttons, then highlight the clicked one
+        // ======================================
+        function setActiveCategoryButton(activeButton) {
+            document.querySelectorAll(".category-btn").forEach((btn) => {
+                btn.className =
+                    "category-btn whitespace-nowrap px-5 py-2 rounded-full text-xs font-medium border transition-all duration-300 bg-white/5 text-gray-400 border-white/10 hover:bg-white/10 hover:text-white hover:border-white/20";
+            });
+
+            activeButton.className =
+                "category-btn whitespace-nowrap px-5 py-2 rounded-full text-xs font-medium border transition-all duration-300 bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.3)] border-transparent scale-105";
+        }
+
+        // ======================================
+        // Infinite Scroll Listener
+        // Loads more products when user scrolls near bottom
+        // ======================================
+        window.addEventListener("scroll", () => {
+            if (isLoading || !hasNext) return;
+
+            const rect = trigger.getBoundingClientRect();
+
+            if (rect.top <= window.innerHeight + 250) {
+                loadProducts(true);
+            }
+        });
+
+        // ======================================
+        // Search Input Debounce
+        // Waits 400ms after typing before searching
+        // ======================================
+        searchInput.addEventListener("input", () => {
+            clearTimeout(searchTimeout);
+
+            searchTimeout = setTimeout(() => {
+                resetAndLoad();
+            }, 400);
+        });
+
+        // ======================================
+        // Category Filtering
+        // Updates selected category and reloads products
+        // ======================================
+        function filterCategory(catId, btnElement) {
+            currentCategory = catId;
+            setActiveCategoryButton(btnElement);
+            resetAndLoad();
+        }
+
+        // ======================================
+        // Reset Products & Reload
+        // Used when searching or changing category
+        // ======================================
+        function resetAndLoad() {
+            currentPage = 1;
+            hasNext = true;
+            loadedProductCount = 0;
+            hideTrigger();
+
+            const container = document.getElementById("filtersContainer");
+
+            if (container) {
+                const y = container.getBoundingClientRect().top + window.pageYOffset - 100;
+
+                window.scrollTo({
+                    top: y,
+                    behavior: "smooth"
+                });
+            }
+
+            loadProducts(false);
+        }
+
+        // ======================================
+        // Merge Appended Brand Sections
+        // ======================================
+        // When infinite scroll loads page 2+, some brand sections
+        // may already exist on the page (because a brand's products
+        // were split across two pages by pagination).
+        //
+        // Instead of inserting a duplicate brand heading, this
+        // function finds the existing section and merges the new
+        // product cards into its grid. If the brand is truly new,
+        // the whole section is appended as normal.
+        // ======================================
+        function mergeOrAppendSections(html) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+            const newSections = doc.querySelectorAll("[data-brand-id]");
+
+            newSections.forEach(newSection => {
+                const brandId = newSection.dataset.brandId;
+                const existing = productSections.querySelector(`[data-brand-id="${brandId}"]`);
+
+                if (existing) {
+                    // ── Brand section already on page ──────────────────────
+                    // Inject new product cards into the existing grid
+                    const existingGrid = existing.querySelector("[data-brand-grid]");
+                    const newGrid = newSection.querySelector("[data-brand-grid]");
+
+                    if (existingGrid && newGrid) {
+                        existingGrid.insertAdjacentHTML("beforeend", newGrid.innerHTML);
+
+                        // Start observing the newly injected lazy images
+                        observeImages(existingGrid);
+                    }
+
+                    // Update the item count badge to reflect the new total
+                    const countBadge = existing.querySelector("[data-brand-count]");
+                    if (countBadge && existingGrid) {
+                        const total = existingGrid.querySelectorAll(":scope > *").length;
+                        countBadge.textContent = `${total} ITEMS`;
+                    }
+
+                } else {
+                    // ── Brand not yet on page ──────────────────────────────
+                    // Append the whole section, then observe its images
+                    productSections.insertAdjacentHTML("beforeend", newSection.outerHTML);
+
+                    const appended = productSections.querySelector(`[data-brand-id="${brandId}"]`);
+                    if (appended) observeImages(appended);
+                }
+            });
+        }
+
+        // ======================================
+        // AJAX Product Loader
+        // isAppend = true  → load next page (infinite scroll)
+        // isAppend = false → replace current products (search/filter)
+        // ======================================
+        async function loadProducts(isAppend = false) {
+            if (isLoading) return;
+
+            isLoading = true;
+
+            // ======================================
+            // Show Correct Loader
+            // ======================================
+            if (isAppend) {
+                showBottomSpinner();
+            } else {
+                mainLoader.classList.remove("hidden");
+                productSections.style.opacity = "0.3";
+                hideTrigger();
+            }
+
+            try {
+                // ======================================
+                // Build Request URL
+                // ======================================
+                const query = searchInput.value.trim();
+                const requestPage = isAppend ? currentPage + 1 : 1;
+
+                let url = `{{ url_for('home.products') }}?ajax=1&page=${requestPage}`;
+
+                if (query) {
+                    url += `&search=${encodeURIComponent(query)}`;
+                }
+
+                if (currentCategory) {
+                    url += `&category_id=${currentCategory}`;
+                }
+
+                // ======================================
+                // Fetch Products From Backend
+                // ======================================
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error("Failed to load products");
+                }
+
+                const data = await response.json();
+
+                // ======================================
+                // Read Response Data
+                // ======================================
+                const html = data.html || "";
+                const productCount = Number(data.product_count || 0);
+
+                // ======================================
+                // Render Products
+                // ======================================
+                if (isAppend) {
+                    if (productCount > 0) {
+                        // Merge into existing brand sections instead of
+                        // blindly appending duplicate headings
+                        mergeOrAppendSections(html);
+                        loadedProductCount += productCount;
+                    }
+                } else {
+                    productSections.innerHTML = html;
+                    loadedProductCount = productCount;
+
+                    // Observe images in the freshly replaced content
+                    observeImages(productSections);
+                }
+
+                // ======================================
+                // Update Pagination State
+                // ======================================
+                currentPage = Number(data.page || requestPage);
+                hasNext = Boolean(data.has_next);
+
+                // ======================================
+                // Update Bottom Trigger Message
+                // ======================================
+                if (loadedProductCount === 0) {
+                    hideTrigger();
+                } else if (isAppend && !hasNext) {
+                    showNoMoreProducts();
+                } else {
+                    hideTrigger();
+                }
+
+            } catch (error) {
+                // ======================================
+                // Error Handling
+                // ======================================
+                console.error(error);
+
+                trigger.innerHTML = `
+                <span class="text-red-400 text-sm font-medium">
+                    Failed to load products
+                </span>
+            `;
+                trigger.classList.remove("opacity-0");
+
+            } finally {
+                // ======================================
+                // Cleanup Loader State
+                // ======================================
+                isLoading = false;
+
+                if (!isAppend) {
+                    mainLoader.classList.add("hidden");
+                    productSections.style.opacity = "1";
+                }
+            }
+        }
+    </script>
+
+{% endblock %}

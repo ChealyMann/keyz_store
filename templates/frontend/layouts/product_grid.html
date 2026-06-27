@@ -1,0 +1,41 @@
+{% if brand_groups %}
+
+    {% for group in brand_groups %}
+        <section class="animate-fade-in" data-brand-id="{{ group.brand_id }}">
+
+            <!-- Brand Title -->
+            <div class="mb-5 md:mb-6 flex items-end justify-between gap-4">
+                <div>
+                    <p class="text-xs text-zinc-500 uppercase tracking-[0.25em] font-semibold mb-2">
+                        Brand
+                    </p>
+
+                    <h2 class="text-2xl md:text-4xl font-black text-white tracking-tight">
+                        {{ group.brand_name }}
+                    </h2>
+
+                    <div class="brand-title-line mt-3"></div>
+                </div>
+
+                <span class="hidden sm:inline-flex rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-zinc-400 uppercase tracking-widest" data-brand-count>
+                    {{ group.products|length }} Items
+                </span>
+            </div>
+
+            <!-- Products In This Brand -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6" data-brand-grid>
+                {% for product in group.products %}
+                    {% include 'frontend/layouts/product_card.html' %}
+                {% endfor %}
+            </div>
+
+        </section>
+    {% endfor %}
+
+{% elif products %}
+
+    {% for product in products %}
+        {% include 'frontend/layouts/product_card.html' %}
+    {% endfor %}
+
+{% endif %}

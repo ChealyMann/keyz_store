@@ -1,0 +1,128 @@
+<div class="animate-fade-in h-full">
+    <a
+        href="{{ url_for('home.product_detail', product_id=product.id) }}"
+        class="group flex flex-col h-full overflow-hidden rounded-2xl border border-white/40 bg-transparent transition-all duration-500 hover:-translate-y-1 hover:border-white/60"
+    >
+        <!-- ====================================== -->
+        <!-- PRODUCT IMAGE -->
+        <!-- ====================================== -->
+        <div class="relative pt-[105%] overflow-hidden bg-transparent">
+
+            <img
+                src="{{ url_for('static', filename='images/resized_' + product.image) if product.image else 'https://via.placeholder.com/500x500?text=No+Image' }}"
+                alt="{{ product.name }}"
+                loading="lazy"
+                class="absolute inset-0 w-full h-full object-cover opacity-95 group-hover:opacity-100 group-hover:scale-105 transition duration-700 ease-out"
+            >
+
+            <!-- ====================================== -->
+            <!-- SALE BADGE -->
+            <!-- Works for:
+                 1. Normal product discount
+                 2. Variant discount
+            -->
+            <!-- ====================================== -->
+            {% if product.has_discount %}
+                <div class="absolute top-3 left-3">
+                    <span class="rounded-full bg-white text-black text-[10px] font-bold px-3 py-1 uppercase tracking-widest">
+                        Sale
+                    </span>
+                </div>
+            {% endif %}
+
+            <!-- Hover Icon -->
+            <div class="absolute bottom-3 right-3 w-8 h-8 rounded-full border border-white/30 bg-black/30 backdrop-blur flex items-center justify-center text-white opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 5l7 7-7 7"
+                    />
+                </svg>
+            </div>
+
+        </div>
+
+        <!-- ====================================== -->
+        <!-- PRODUCT INFO -->
+        <!-- ====================================== -->
+        <div class="p-3 md:p-4 flex flex-col flex-1 bg-transparent">
+
+            <!-- Category + Brand -->
+            <div class="flex items-center justify-between gap-2 mb-2">
+
+                <p class="text-[10px] md:text-xs text-zinc-500 uppercase tracking-wider font-semibold line-clamp-1">
+                    {{ product.category_name.name if product.category_name else 'No Category' }}
+                </p>
+
+                <p class="text-[10px] md:text-xs text-zinc-500 uppercase tracking-wider font-semibold line-clamp-1">
+                    {{ product.brand.name if product.brand else 'No Brand' }}
+                </p>
+
+            </div>
+
+            <!-- Product Name -->
+            <h3 class="text-sm md:text-[15px] font-bold text-white leading-snug mb-4 line-clamp-2 min-h-[38px]">
+                {{ product.name }}
+            </h3>
+
+            <!-- ====================================== -->
+            <!-- PRICE -->
+            <!-- Supports:
+                 1. Normal product price
+                 2. Product discount
+                 3. Variant price range
+                 4. Variant discount range
+            -->
+            <!-- ====================================== -->
+            <div class="mt-auto flex justify-between items-end gap-3">
+
+                <div class="flex flex-col gap-1 leading-none">
+
+                    <!-- Product or variant has discount -->
+                    {% if product.has_discount %}
+
+                        {% if product.promotion_old_price_text %}
+                            <span class="text-xs text-zinc-500 line-through">
+                                {{ product.promotion_old_price_text }}
+                            </span>
+                        {% endif %}
+
+                        <span class="text-base md:text-lg font-black text-white">
+                            {{ product.promotion_price_text }}
+                        </span>
+
+                    <!-- No discount -->
+                    {% else %}
+
+                        {% if product.price_text %}
+                            <span class="text-base md:text-lg font-black text-white">
+                                {{ product.price_text }}
+                            </span>
+                        {% else %}
+                            <span class="text-base md:text-lg font-black text-white">
+                                ${{ "%.2f"|format(product.price) }}
+                            </span>
+                        {% endif %}
+
+                    {% endif %}
+
+                </div>
+
+                <div class="hidden sm:flex w-8 h-8 rounded-full border border-white/20 items-center justify-center text-white group-hover:bg-white group-hover:text-black group-hover:border-white transition-all duration-300 shrink-0">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 5l7 7-7 7"
+                        />
+                    </svg>
+                </div>
+
+            </div>
+
+        </div>
+    </a>
+</div>

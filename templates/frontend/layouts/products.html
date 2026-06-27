@@ -1,0 +1,108 @@
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <h2 class="text-xs sm:text-sm font-bold text-white tracking-widest uppercase">Latest Drops</h2>
+        <div id="categoryFilter" class="flex gap-3 overflow-x-auto scrollbar-hide py-1">
+            <button class="px-6 py-2.5 rounded-full bg-white text-black text-xs font-bold uppercase tracking-widest transition-all whitespace-nowrap">
+                All
+            </button>
+            <button class="px-6 py-2.5 rounded-full bg-black border border-zinc-800 text-zinc-500 hover:text-white hover:border-zinc-500 text-xs font-bold uppercase tracking-widest transition-all whitespace-nowrap">
+                Keyboards
+            </button>
+            <button class="px-6 py-2.5 rounded-full bg-black border border-zinc-800 text-zinc-500 hover:text-white hover:border-zinc-500 text-xs font-bold uppercase tracking-widest transition-all whitespace-nowrap">
+                Audio
+            </button>
+        </div>
+    </div>
+
+    <div id="product-grid-popular" class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
+
+        <div class="product-card group flex flex-col rounded-2xl bg-black border border-zinc-800 hover:border-zinc-500 overflow-hidden transition-all duration-500 shadow-lg"
+             data-name="Cyberboard" data-category="keyboards">
+            <div class="relative pt-[100%] overflow-hidden bg-zinc-900">
+                <img src="https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?w=500&auto=format&fit=crop&q=60"
+                     alt="Product"
+                     class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-transform duration-700 ease-out">
+            </div>
+            <div class="p-4 md:p-5 flex flex-col flex-1 bg-black">
+                <p class="text-[10px] md:text-xs text-zinc-500 mb-2 uppercase tracking-wider font-semibold">Mechanical Keyboard</p>
+                <h3 class="text-sm font-bold text-white leading-tight mb-4 line-clamp-2">Cyberboard Terminal</h3>
+                <div class="mt-auto flex justify-between items-end">
+                    <span class="text-sm md:text-base font-bold text-white">$450.00</span>
+                    <div class="w-8 h-8 rounded-full border border-zinc-700 flex items-center justify-center group-hover:bg-white group-hover:text-black group-hover:border-white transition-colors duration-300 cursor-pointer">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-card group flex flex-col rounded-2xl bg-black border border-zinc-800 hover:border-zinc-500 overflow-hidden transition-all duration-500 shadow-lg"
+             data-name="Moondrop" data-category="audio">
+            <div class="relative pt-[100%] overflow-hidden bg-zinc-900">
+                <img src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&auto=format&fit=crop&q=60"
+                     alt="Product"
+                     class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-transform duration-700 ease-out">
+                <div class="absolute top-4 left-4">
+                    <span class="bg-white text-black text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest shadow-md">Sale</span>
+                </div>
+            </div>
+            <div class="p-4 md:p-5 flex flex-col flex-1 bg-black">
+                <p class="text-[10px] md:text-xs text-zinc-500 mb-2 uppercase tracking-wider font-semibold">IEMs</p>
+                <h3 class="text-sm font-bold text-white leading-tight mb-4 line-clamp-2">Moondrop Aria</h3>
+                <div class="mt-auto flex justify-between items-end">
+                    <div class="flex flex-col gap-1 leading-none">
+                        <span class="text-xs text-zinc-500 line-through">$89.99</span>
+                        <span class="text-sm md:text-base font-bold text-red-500">$79.99</span>
+                    </div>
+                    <div class="w-8 h-8 rounded-full border border-zinc-700 flex items-center justify-center group-hover:bg-white group-hover:text-black group-hover:border-white transition-colors duration-300 cursor-pointer">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-card group flex flex-col rounded-2xl bg-black border border-zinc-800 hover:border-zinc-500 overflow-hidden transition-all duration-500 shadow-lg"
+             data-name="Logitech" data-category="mice">
+            <div class="relative pt-[100%] overflow-hidden bg-zinc-900">
+                <img src="https://images.unsplash.com/photo-1605773527852-c546a8584ea3?w=500&auto=format&fit=crop&q=60"
+                     alt="Product"
+                     class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-transform duration-700 ease-out">
+            </div>
+            <div class="p-4 md:p-5 flex flex-col flex-1 bg-black">
+                <p class="text-[10px] md:text-xs text-zinc-500 mb-2 uppercase tracking-wider font-semibold">Wireless Mouse</p>
+                <h3 class="text-sm font-bold text-white leading-tight mb-4 line-clamp-2">G Pro Superlight</h3>
+                <div class="mt-auto flex justify-between items-end">
+                    <span class="text-sm md:text-base font-bold text-white">$149.00</span>
+                    <div class="w-8 h-8 rounded-full border border-zinc-700 flex items-center justify-center group-hover:bg-white group-hover:text-black group-hover:border-white transition-colors duration-300 cursor-pointer">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-card group flex flex-col rounded-2xl bg-black border border-zinc-800 hover:border-zinc-500 overflow-hidden transition-all duration-500 shadow-lg"
+             data-name="Keycaps" data-category="keyboards">
+            <div class="relative pt-[100%] overflow-hidden bg-zinc-900">
+                <img src="https://images.unsplash.com/photo-1605773527852-c546a8584ea3?w=500&auto=format&fit=crop&q=60"
+                     alt="Product"
+                     class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-transform duration-700 ease-out">
+            </div>
+            <div class="p-4 md:p-5 flex flex-col flex-1 bg-black">
+                <p class="text-[10px] md:text-xs text-zinc-500 mb-2 uppercase tracking-wider font-semibold">Keycaps</p>
+                <h3 class="text-sm font-bold text-white leading-tight mb-4 line-clamp-2">GMK WoB Set</h3>
+                <div class="mt-auto flex justify-between items-end">
+                    <span class="text-sm md:text-base font-bold text-white">$110.00</span>
+                    <div class="w-8 h-8 rounded-full border border-zinc-700 flex items-center justify-center group-hover:bg-white group-hover:text-black group-hover:border-white transition-colors duration-300 cursor-pointer">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="no-results" class="hidden text-center py-20 border border-zinc-800 rounded-2xl mt-8">
+        <p class="text-zinc-500 text-sm font-bold uppercase tracking-widest mb-6">No products found.</p>
+        <button onclick="window.keyzStore.clearFilters()" class="border border-white text-white px-8 py-3 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors">Clear Filters</button>
+    </div>
+</main>

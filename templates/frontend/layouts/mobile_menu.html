@@ -1,0 +1,55 @@
+<div id="mobile-menu" class="fixed inset-0 z-[100] hidden">
+    <div id="menu-overlay" class="fixed inset-0 bg-black/80 backdrop-blur-sm opacity-0 transition-opacity duration-500">
+    </div>
+
+    <div class="fixed right-0 top-0 h-full w-[85%] max-w-sm bg-black shadow-2xl transform translate-x-full offcanvas-transition flex flex-col border-l border-zinc-800">
+
+        <div class="flex justify-between items-center p-6 border-b border-zinc-800 relative z-10">
+            <div>
+                <span class="text-xl font-bold text-white tracking-widest uppercase">KEYZ<span class="text-zinc-600">STORE</span></span>
+            </div>
+            <button id="close-menu-button" class="group p-2 rounded-full border border-zinc-800 hover:border-white text-zinc-400 hover:text-white transition-all duration-300">
+                <svg class="w-5 h-5 transition-transform duration-300 group-hover:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="p-8 overflow-y-auto flex-1 relative z-10 no-scrollbar">
+            <nav class="space-y-12">
+                <ul class="space-y-6">
+                    <li>
+                        <a href="{{ url_for('home.home') }}" class="group flex items-center gap-4 text-2xl font-bold uppercase tracking-widest {{ 'text-white' if request.endpoint == 'home.home' else 'text-zinc-500' }} hover:text-white transition-colors">
+                            Home
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('home.products') }}" class="group flex items-center gap-4 text-2xl font-bold uppercase tracking-widest {{ 'text-white' if request.endpoint == 'home.products' else 'text-zinc-500' }} hover:text-white transition-colors">
+                            Products
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('home.promotions') }}" class="group flex items-center gap-4 text-2xl font-bold uppercase tracking-widest {{ 'text-white' if request.endpoint == 'home.promotions' else 'text-zinc-500' }} hover:text-white transition-colors">
+                            Promotions
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="pt-8 border-t border-zinc-800">
+                    <p class="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.2em] mb-6">Explore Categories</p>
+                    <div class="grid grid-cols-1 gap-2">
+                        {% for category in categories %}
+                        <a href="{{ url_for('home.products', category_id=category.id) }}"
+                            class="flex items-center justify-between py-3 rounded-none border-b border-zinc-900 hover:border-zinc-500 transition-all group">
+                            <span class="text-xs font-bold uppercase tracking-widest {{ 'text-white' if request.view_args.get('category_id')|string == category.id|string else 'text-zinc-500' }} group-hover:text-white transition-colors">{{ category.name }}</span>
+                            <svg class="w-4 h-4 {{ 'text-white translate-x-1' if request.view_args.get('category_id')|string == category.id|string else 'text-zinc-700' }} group-hover:text-white transition-colors transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+</div>

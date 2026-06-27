@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Keyzstore Admin Dashboard">
+    <link rel="icon" type="image/jpg" href="{{ url_for('static',filename='logo/icon.jpg') }}">
+
+    <title>{% block page_title %}{{ config['title'] }} | Keyzstore{% endblock %}</title>
+
+    <link href="{{ url_for('static',filename='admin/assets/extra-libs/c3/c3.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static',filename='admin/assets/libs/chartist/dist/chartist.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static',filename='admin/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.css') }}"
+          rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='admin/dist/css/style.min.css') }}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://kit.fontawesome.com/4038e64837.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        /* Premium Light Theme */
+        :root {
+            --bg-main: #ffffff; /* Clean off-white background */
+            --bg-card: #ffffff; /* Pure white cards */
+            --bg-hover: #f1f5f9; /* Subtle hover state */
+            --border-light: #e5e7eb; /* Soft gray borders */
+            --text-main: #111827; /* Deep black for primary text */
+            --text-muted: #6b7280; /* Medium gray for secondary text */
+            --accent-black: #000000;
+            --accent-primary: #3b82f6; /* Modern Blue for subtle accents */
+            --accent-success: #10b981; /* Fresh Green */
+        }
+
+        body, html {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main) !important;
+            color: var(--text-main) !important;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Utility overrides to replace hardcoded dark theme classes */
+        .text-main {
+            color: var(--text-main) !important;
+        }
+
+        /* Layout Structure */
+        .page-wrapper {
+            background-color: var(--bg-main) !important;
+        }
+
+        .topbar, .navbar-header, .left-sidebar {
+            background-color: var(--bg-card) !important;
+            border-color: var(--border-light) !important;
+        }
+
+        .topbar {
+            border-bottom: 1px solid var(--border-light) !important;
+            box-shadow: none;
+        }
+
+        .left-sidebar, .navbar-header {
+            border-right: 1px solid var(--border-light) !important;
+        }
+
+        /* Minimalist Cards */
+        .card {
+            background-color: var(--bg-card) !important;
+            border: 1px solid var(--border-light) !important;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important; /* Soft premium shadow */
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: #d1d5db !important;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08) !important;
+        }
+
+        .card-body {
+            padding: 1.5rem !important;
+        }
+
+        .card-title {
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-size: 0.8rem;
+            color: var(--text-main) !important;
+        }
+
+        /* Typography Overrides */
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-main) !important;
+            font-weight: 400;
+        }
+
+        h2 {
+            font-size: 2rem;
+            letter-spacing: -0.02em;
+        }
+
+        .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        .border-end, .border-bottom, .border-top {
+            border-color: var(--border-light) !important;
+        }
+
+        /* Sidebar Links */
+        .sidebar-nav ul .sidebar-item > .sidebar-link span,
+        .sidebar-nav ul .sidebar-item > .sidebar-link i {
+            color: var(--text-muted) !important;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .sidebar-nav ul .sidebar-item:hover > .sidebar-link span,
+        .sidebar-nav ul .sidebar-item:hover > .sidebar-link i {
+            color: var(--accent-primary) !important;
+        }
+
+        .sidebar-nav ul .sidebar-item.selected > .sidebar-link {
+            background: var(--bg-hover) !important;
+            border-radius: 8px;
+            border: 1px solid var(--border-light);
+        }
+
+        .sidebar-nav ul .sidebar-item.selected > .sidebar-link span,
+        .sidebar-nav ul .sidebar-item.selected > .sidebar-link i {
+            color: var(--text-main) !important;
+            font-weight: 600;
+        }
+
+        /* Tables - Clean & Spaced */
+        .table th, .table td {
+            border-color: var(--border-light) !important;
+            color: var(--text-main) !important;
+            vertical-align: middle;
+            padding: 1.25rem 1rem !important;
+        }
+
+        .table thead th {
+            background-color: var(--bg-hover) !important;
+            color: var(--text-muted) !important;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-size: 0.7rem;
+            border-bottom: 1px solid var(--border-light) !important;
+            border-top: none !important;
+        }
+
+        .table tbody tr {
+            transition: background-color 0.2s;
+        }
+
+        .table tbody tr:hover {
+            background-color: var(--bg-hover) !important;
+        }
+
+        /* Inputs & Dropdowns */
+        .form-control, .custom-select, .customize-input input {
+            background-color: var(--bg-card) !important;
+            border: 1px solid var(--border-light) !important;
+            color: var(--text-main) !important;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+        }
+
+        .form-control:focus, .custom-select:focus {
+            border-color: var(--accent-black) !important;
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .dropdown-menu {
+            background-color: var(--bg-card) !important;
+            border: 1px solid var(--border-light) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .dropdown-item {
+            color: var(--text-main) !important;
+            padding: 10px 20px;
+            transition: all 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--bg-hover) !important;
+            color: var(--accent-primary) !important;
+        }
+
+        /* Buttons & Badges */
+        .badge {
+            padding: 0.4em 0.8em;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            border-radius: 4px;
+        }
+
+        .badge.bg-dark {
+            background-color: var(--accent-black) !important;
+            color: #ffffff !important;
+        }
+
+        .badge.bg-success {
+            background-color: rgba(16, 185, 129, 0.1) !important;
+            color: var(--accent-success) !important;
+            border: 1px solid var(--accent-success) !important;
+        }
+
+        .badge.bg-primary {
+            background-color: rgba(59, 130, 246, 0.1) !important;
+            color: var(--accent-primary) !important;
+            border: 1px solid var(--accent-primary) !important;
+        }
+
+        .scrollbar-hidden::-webkit-scrollbar {
+            display: none;
+        }
+
+        .lds-pos {
+            border-color: var(--accent-black) !important;
+        }
+    </style>
+</head>
+
+<body>
+<div class="preloader">
+    <div class="lds-ripple">
+        <div class="lds-pos"></div>
+        <div class="lds-pos"></div>
+    </div>
+</div>
+
+<div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+     data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+
+    <header class="topbar" data-navbarbg="skin6">
+        {% block header %}
+            <nav class="navbar top-navbar navbar-expand-lg">
+                <div class="navbar-header" data-logobg="skin6">
+                    <a class="nav-toggler waves-effect waves-light d-block d-lg-none" href="javascript:void(0)">
+                        <i class="ti-menu ti-close text-main"></i>
+                    </a>
+
+                    <div class="navbar-brand justify-content-center">
+                        <a href="{{ url_for('admin.admin') }}" class="d-flex align-items-center">
+                            <span class="text-main"
+                                  style="font-size: 1.1rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;">Keyzstore</span>
+                        </a>
+                    </div>
+
+                    <a class="topbartoggler d-block d-lg-none waves-effect waves-light" href="javascript:void(0)"
+                       data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+                        <i class="ti-more text-main"></i>
+                    </a>
+                </div>
+
+                <div class="navbar-collapse collapse" id="navbarSupportedContent"
+                     style="background-color: transparent;">
+                    <ul class="navbar-nav float-left me-auto ms-3 ps-1"></ul>
+
+                    <ul class="navbar-nav float-end">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-bs-toggle="dropdown">
+                                <img src="{{ url_for('static', filename='images/' ~ session.get('image', 'default-user.png')) }}"
+                                     alt="user"
+                                     class="rounded-circle"
+                                     width="40"
+                                     height="40"
+                                     style="border: 2px solid #e5e7eb; object-fit: cover;">
+
+                                <span class="ms-2 d-none d-lg-inline-block">
+        <span class="text-main font-weight-bold text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.1em;">
+            {{ session.get('username', 'Admin') }}
+        </span>
+        <i data-feather="chevron-down" class="svg-icon text-muted ms-1" style="width: 14px;"></i>
+    </span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end dropdown-menu-right user-dd animated flipInY">
+                                <a class="dropdown-item font-weight-bold" href="{{ url_for('auth.logout') }}"
+                                   style="font-size: 0.75rem; letter-spacing: 0.05em; text-transform: uppercase;">
+                                    <i data-feather="power" class="svg-icon me-2 ms-1" style="width: 14px;"></i> Logout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        {% endblock %}
+    </header>
+
+    <aside class="left-sidebar" data-sidebarbg="skin6">
+        {% block left_sidebar %}
+            {% include('backend/admin/layouts/left_side.html') %}
+        {% endblock %}
+    </aside>
+
+    <div class="page-wrapper">
+        {% block main %}{% endblock %}
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='admin/assets/libs/jquery/dist/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='admin/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ url_for('static', filename='admin/dist/js/app-style-switcher.js') }}"></script>
+<script src="{{ url_for('static', filename='admin/dist/js/feather.min.js') }}"></script>
+<script src="{{ url_for('static', filename='admin/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='admin/dist/js/sidebarmenu.js') }}"></script>
+<script src="{{ url_for('static', filename='admin/dist/js/custom.min.js') }}"></script>
+<script src="{{ url_for('static', filename='admin/assets/extra-libs/c3/d3.min.js') }}"></script>
+<script src="{{ url_for('static', filename='admin/assets/extra-libs/c3/c3.min.js') }}"></script>
+<script src="{{ url_for('static', filename='admin/assets/libs/chartist/dist/chartist.min.js') }}"></script>
+<script src="{{ url_for('static', filename='admin/assets/libs/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js') }}"></script>
+<script src="{{ url_for('static', filename='admin/dist/js/pages/dashboards/dashboard1.min.js') }}"></script>
+</body>
+</html>
